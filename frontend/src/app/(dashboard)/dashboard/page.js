@@ -2,138 +2,135 @@
 import { useState, useEffect } from 'react';
 import api from '@/utils/api';
 import {
-    TrendingUp,
-    TrendingDown,
-    DollarSign,
-    Clock,
     ArrowUpRight,
     ArrowDownRight,
-    Plus
+    Clock,
+    Plus,
+    ArrowRight,
+    TrendingUp,
+    History,
+    Wallet
 } from 'lucide-react';
-import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area
-} from 'recharts';
-import Link from 'next/link';
 
-const data = [
-    { name: 'Jan', interest: 400 },
-    { name: 'Feb', interest: 300 },
-    { name: 'Mar', interest: 600 },
-    { name: 'Apr', interest: 800 },
-    { name: 'May', interest: 500 },
-    { name: 'Jun', interest: 900 },
+const stats = [
+    { name: 'Total Borrowed', value: '$45,987', sub: 'Today', color: 'indigo' },
+    { name: 'Total Returned', value: '$30,000', sub: 'View History', color: 'emerald' },
+];
+
+const paymentsDue = [
+    { id: 1, name: 'Suresh', amount: '₹ 4000', label: 'today', avatar: 'SP' },
+    { id: 2, name: 'Jagrati', amount: '₹ 2400', label: 'today', avatar: 'JT' },
+    { id: 3, name: 'Shiva', amount: '₹ 3000', label: 'tomorrow', avatar: 'SH' },
+    { id: 4, name: 'Rohit', amount: '₹ 2000', label: 'tomorrow', avatar: 'RH' },
+];
+
+const investorPerformance = [
+    { id: 1, name: 'Suresh Prabha', date: '03.07.2024', amount: '₹ 200K', rate: '1.5% (3K)', avatar: 'SP' },
+    { id: 2, name: 'Jagrati Thakur', date: '03.07.2024', amount: '₹ 100K', rate: '3.0% (3K)', avatar: 'JT' },
+    { id: 3, name: 'Shiva', date: '03.07.2024', amount: '₹ 100K', rate: '2.0% (4K)', avatar: 'SH' },
 ];
 
 export default function DashboardPage() {
-    const [summary, setSummary] = useState({
-        totalGiven: 0,
-        totalTaken: 0,
-        totalOutstandingBalance: 0,
-        recentTransactions: []
-    });
-
-    useEffect(() => {
-        const fetchSummary = async () => {
-            try {
-                const res = await api.get('/dashboard/summary');
-                setSummary(res.data);
-            } catch (err) {
-                console.error('Failed to fetch summary');
-            }
-        };
-        fetchSummary();
-    }, []);
-
-    const stats = [
-        { title: 'Total Given', value: summary.totalGiven, icon: TrendingUp, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-        { title: 'Total Taken', value: summary.totalTaken, icon: TrendingDown, color: 'text-rose-400', bg: 'bg-rose-500/10' },
-        { title: 'Outstanding', value: summary.totalOutstandingBalance, icon: Clock, color: 'text-amber-400', bg: 'bg-amber-500/10' },
-        { title: 'Total Revenue', value: summary.totalGiven * 0.05, icon: DollarSign, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-    ];
-
     return (
-        <div className="space-y-8 animate-in fade-in duration-700">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold text-white font-outfit">Financial Dashboard</h1>
-                    <p className="text-neutral-400 mt-1">Review your lending activity and interest growth.</p>
-                </div>
-                <Link
-                    href="/transactions"
-                    className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-lg shadow-indigo-600/20 active:scale-95"
-                >
-                    <Plus size={20} />
-                    New Transaction
-                </Link>
-            </div>
+        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stats.map((stat) => (
-                    <div key={stat.title} className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-3xl backdrop-blur-sm transition-transform hover:translate-y-[-4px]">
-                        <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center mb-4`}>
-                            <stat.icon size={24} />
+            {/* Ready to Redeem Card */}
+            <section>
+                <div className="card-premium bg-white p-8 relative overflow-hidden group">
+                    <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-50 rounded-full blur-3xl opacity-50 group-hover:bg-indigo-100 transition-all duration-700" />
+
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div>
+                            <p className="text-sm font-bold text-indigo-300 uppercase tracking-widest mb-2 font-outfit">Ready to redeem</p>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-4xl md:text-5xl font-black text-[#1E1B4B] font-outfit">₹ 45,987.15</span>
+                                <span className="text-indigo-400 font-bold">today</span>
+                            </div>
+                            <div className="mt-4 flex items-center gap-6">
+                                <div>
+                                    <p className="text-[10px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Total redeemed</p>
+                                    <p className="text-emerald-500 font-bold font-outfit text-base">₹ 30,000.00</p>
+                                </div>
+                                <button className="text-[10px] font-bold text-indigo-600 flex items-center gap-1 hover:underline">
+                                    View History <ArrowRight size={10} />
+                                </button>
+                            </div>
                         </div>
-                        <p className="text-neutral-500 text-sm font-medium">{stat.title}</p>
-                        <p className="text-2xl font-bold text-white mt-1 font-outfit">
-                            ${stat.value.toLocaleString()}
-                        </p>
-                    </div>
-                ))}
-            </div>
 
-            {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 bg-neutral-900/50 border border-neutral-800 p-6 rounded-3xl backdrop-blur-sm">
-                    <h3 className="text-lg font-bold text-white mb-6 font-outfit">Interest Over Time</h3>
-                    <div className="h-[300px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data}>
-                                <defs>
-                                    <linearGradient id="colorInt" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#262626" />
-                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#737373', fontSize: 12 }} />
-                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#737373', fontSize: 12 }} />
-                                <Tooltip
-                                    contentStyle={{ backgroundColor: '#171717', border: '1px solid #262626', borderRadius: '12px', color: '#fff' }}
-                                />
-                                <Area type="monotone" dataKey="interest" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorInt)" />
-                            </AreaChart>
-                        </ResponsiveContainer>
+                        <button className="btn-indigo">
+                            Redeem Now
+                        </button>
                     </div>
                 </div>
+            </section>
 
-                <div className="bg-neutral-900/50 border border-neutral-800 p-6 rounded-3xl backdrop-blur-sm">
-                    <h3 className="text-lg font-bold text-white mb-6 font-outfit">Recent Activity</h3>
-                    <div className="space-y-4">
-                        {summary.recentTransactions.length > 0 ? summary.recentTransactions.map((t) => (
-                            <div key={t._id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-neutral-800/50 transition-colors">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${t.transactionType === 'Given' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
-                                    {t.transactionType === 'Given' ? <ArrowUpRight size={18} /> : <ArrowDownRight size={18} />}
-                                </div>
-                                <div className="flex-1 overflow-hidden">
-                                    <p className="text-sm font-semibold text-white truncate">{t.borrowerName}</p>
-                                    <p className="text-xs text-neutral-500">{new Date(t.transactionDate).toLocaleDateString()}</p>
-                                </div>
-                                <div className="text-right">
-                                    <p className={`text-sm font-bold ${t.transactionType === 'Given' ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                        {t.transactionType === 'Given' ? '+' : '-'}${t.principalAmount}
-                                    </p>
+            {/* Payments Due Horizontal List */}
+            <section className="space-y-4">
+                <h3 className="text-xl font-bold text-[#1E1B4B] font-outfit flex items-center justify-between">
+                    Payments Due
+                    <button className="text-xs text-indigo-500 hover:underline">View All</button>
+                </h3>
+                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-2 px-2">
+                    {paymentsDue.map((item) => (
+                        <div key={item.id} className="min-w-[120px] bg-white rounded-3xl p-4 shadow-sm border border-indigo-50 flex flex-col items-center gap-3 active:scale-95 transition-all text-center">
+                            <div className="flex flex-col items-center">
+                                <span className="text-[10px] font-bold text-red-500 mb-1">{item.amount}</span>
+                                <span className="text-[9px] font-bold text-neutral-400 uppercase tracking-widest">{item.label}</span>
+                            </div>
+                            <div className="w-14 h-14 rounded-full p-0.5 border-2 border-indigo-50">
+                                <div className="w-full h-full rounded-full bg-slate-100 flex items-center justify-center text-indigo-600 font-bold font-outfit">
+                                    {item.avatar}
                                 </div>
                             </div>
-                        )) : (
-                            <div className="text-center py-12 text-neutral-600">
-                                <p>No recent transactions</p>
-                            </div>
-                        )}
-                    </div>
+                            <p className="text-xs font-bold text-[#1E1B4B]">{item.name}</p>
+                        </div>
+                    ))}
+                    <button className="min-w-[120px] bg-[#6366F1]/5 border-2 border-dashed border-[#6366F1]/20 rounded-3xl p-4 flex flex-col items-center justify-center gap-2 group hover:bg-[#6366F1]/10 transition-all">
+                        <div className="w-12 h-12 rounded-full bg-[#6366F1] flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                            <Plus size={24} />
+                        </div>
+                        <span className="text-[10px] font-black text-[#6366F1] uppercase tracking-wider">Add More</span>
+                    </button>
                 </div>
-            </div>
+            </section>
+
+            {/* Action Buttons */}
+            <section className="grid grid-cols-2 gap-4">
+                <button className="btn-indigo w-full py-4 rounded-[2rem] flex items-center justify-center gap-2">
+                    <Plus size={20} /> Add Transactions
+                </button>
+                <button className="bg-[#FF8C42] hover:bg-[#F97316] text-white py-4 rounded-[2rem] font-bold shadow-lg shadow-orange-100 transition-all active:scale-95 flex items-center justify-center gap-2">
+                    <TrendingUp size={20} /> Invest Now
+                </button>
+            </section>
+
+            {/* Investor Performance List */}
+            <section className="space-y-4">
+                <h3 className="text-xl font-bold text-[#1E1B4B] font-outfit">Investor Performance</h3>
+                <div className="space-y-4">
+                    {investorPerformance.map((item) => (
+                        <div key={item.id} className="card-premium flex items-center justify-between p-5">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-[#6366F1] font-black font-outfit shadow-sm">
+                                    {item.avatar}
+                                </div>
+                                <div>
+                                    <h4 className="text-sm font-black text-[#1E1B4B] font-outfit">{item.name}</h4>
+                                    <p className="text-[10px] font-bold text-indigo-300">{item.date}</p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-sm font-black text-[#1E1B4B] font-outfit">{item.amount}</p>
+                                <p className="text-[10px] font-bold text-emerald-500">{item.rate}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <button className="w-full py-4 text-xs font-bold text-indigo-500 hover:text-indigo-700 transition-colors uppercase tracking-widest font-outfit">
+                    View All Transactions
+                </button>
+            </section>
+
         </div>
     );
 }
