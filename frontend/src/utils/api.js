@@ -1,25 +1,24 @@
 import axios from "axios";
 
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://unlox-backend.onrender.com";
+
 const api = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
+  baseURL: `${API_URL}/api`,
 });
 
-// Add a request interceptor
 api.interceptors.request.use(
   (config) => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
-
       if (token) {
         config.headers["x-auth-token"] = token;
       }
     }
-
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default api;
