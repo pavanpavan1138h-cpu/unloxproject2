@@ -1,11 +1,6 @@
 import axios from 'axios';
 
-const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api',
-    headers: {
-        'Content-Type': 'application/json'
-    }
-});
+const api = axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/users`)
 
 // Add a request interceptor
 api.interceptors.request.use(
